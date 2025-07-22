@@ -1,0 +1,257 @@
+.status-display {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.status-header {
+  margin-bottom: 20px;
+}
+
+.status-title {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 2px solid #e74c3c;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+/* 상태 카드 */
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  border-left: 5px solid;
+  transition: all 0.3s ease;
+}
+
+.status-card--success {
+  background: linear-gradient(145deg, #d5f4e6, #a8e6cf);
+  border-left-color: #27ae60;
+}
+
+.status-card--error {
+  background: linear-gradient(145deg, #fdf2f2, #fadbd8);
+  border-left-color: #e74c3c;
+}
+
+.status-card--warning {
+  background: linear-gradient(145deg, #fef7e0, #fcf3cf);
+  border-left-color: #f39c12;
+}
+
+.status-card--info {
+  background: linear-gradient(145deg, #ebf3fd, #d6eaf8);
+  border-left-color: #3498db;
+}
+
+.status-icon {
+  font-size: 2rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.status-content {
+  flex: 1;
+}
+
+.status-label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 5px 0;
+}
+
+.status-message {
+  font-size: 1rem;
+  color: #5a6c7d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 거래 정보 */
+.transaction-info {
+  margin-bottom: 25px;
+}
+
+.info-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.info-item--change {
+  background: linear-gradient(145deg, #d5f4e6, #a8e6cf);
+  border-color: #27ae60;
+  animation: highlight 2s ease-in-out;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: right;
+}
+
+.info-value--amount {
+  color: #e74c3c;
+  font-size: 1.1rem;
+  font-family: "Courier New", monospace;
+}
+
+.info-value--change {
+  color: #27ae60;
+  font-size: 1.1rem;
+  font-family: "Courier New", monospace;
+}
+
+/* 잔돈 상세 */
+.change-details {
+  background: linear-gradient(145deg, #d5f4e6, #a8e6cf);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 2px solid #27ae60;
+}
+
+.change-details h4 {
+  color: #27ae60;
+  font-size: 1rem;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.change-breakdown {
+  color: #2c3e50;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* 재고 현황 */
+.inventory-status {
+  border-top: 2px solid rgba(52, 73, 94, 0.1);
+  padding-top: 20px;
+}
+
+.inventory-status h4 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin: 0 0 15px 0;
+  text-align: center;
+}
+
+.inventory-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.inventory-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.inventory-name {
+  font-weight: 600;
+  color: #495057;
+}
+
+.inventory-stock {
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.inventory-stock:not(.out-of-stock):not(.low-stock) {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.inventory-stock.low-stock {
+  background: #fef7e0;
+  color: #f39c12;
+}
+
+.inventory-stock.out-of-stock {
+  background: #fdf2f2;
+  color: #e74c3c;
+}
+
+@keyframes highlight {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .status-display {
+    padding: 20px;
+  }
+
+  .status-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .status-icon {
+    font-size: 1.8rem;
+  }
+
+  .info-item {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+
+  .info-value {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-title {
+    font-size: 1.3rem;
+  }
+
+  .status-label {
+    font-size: 1rem;
+  }
+
+  .status-message {
+    font-size: 0.9rem;
+  }
+}
