@@ -1,0 +1,283 @@
+.payment-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.payment-panel__title {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #f39c12;
+  padding-bottom: 10px;
+}
+
+/* 결제 수단 선택 */
+.payment-method-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.payment-method-btn {
+  background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+  color: #2c3e50;
+  padding: 15px 0px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.payment-method-btn.active {
+  background: linear-gradient(145deg, #3498db, #2980b9);
+  color: white;
+  border-color: #2980b9;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.payment-method-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #d5dbdb, #95a5a6);
+}
+
+.payment-method-btn.active:hover:not(:disabled) {
+  background: linear-gradient(145deg, #2980b9, #21618c);
+}
+
+/* 현금 패널 */
+.cash-panel {
+  animation: slideIn 0.3s ease-out;
+}
+
+.cash-panel h3 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.cash-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.cash-btn {
+  background: linear-gradient(145deg, #27ae60, #2ecc71);
+  color: white;
+  padding: 15px 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+  transition: all 0.2s ease;
+}
+
+.cash-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #229954, #27ae60);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(39, 174, 96, 0.4);
+}
+
+.cash-btn__amount {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cash-btn__text {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.cash-panel__info {
+  background: linear-gradient(145deg, #d5f4e6, #a8e6cf);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.cash-panel__info p {
+  margin: 0;
+  color: #27ae60;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* 카드 패널 */
+.card-panel {
+  animation: slideIn 0.3s ease-out;
+}
+
+.card-panel h3 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.card-panel h4 {
+  color: #34495e;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* 빠른 결제 */
+.quick-payment {
+  margin-bottom: 20px;
+}
+
+.quick-payment-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.quick-payment-btn {
+  background: linear-gradient(145deg, #9b59b6, #8e44ad);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(155, 89, 182, 0.3);
+}
+
+.quick-payment-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #8e44ad, #7d3c98);
+}
+
+/* 직접 입력 */
+.card-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.card-amount-input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #bdc3c7;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.card-amount-input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1);
+}
+
+.card-payment-btn {
+  background: linear-gradient(145deg, #e67e22, #d35400);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(230, 126, 34, 0.3);
+}
+
+.card-payment-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #d35400, #ba4a00);
+}
+
+.card-panel__info {
+  background: linear-gradient(145deg, #f4ecf7, #e8daef);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.card-panel__info p {
+  margin: 0 0 5px 0;
+  color: #8e44ad;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.card-panel__info p:last-child {
+  margin-bottom: 0;
+}
+
+/* 투입 금액 표시 */
+.inserted-amount {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(52, 73, 94, 0.1);
+}
+
+.inserted-amount h3 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.amount-display {
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.amount-value {
+  color: #2ecc71;
+  font-size: 2rem;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+  font-family: "Courier New", monospace;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .payment-panel {
+    padding: 20px;
+  }
+
+  .cash-buttons {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .quick-payment-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .amount-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-method-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .cash-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card-input-group {
+    flex-direction: column;
+  }
+
+  .quick-payment-buttons {
+    grid-template-columns: 1fr;
+  }
+}
