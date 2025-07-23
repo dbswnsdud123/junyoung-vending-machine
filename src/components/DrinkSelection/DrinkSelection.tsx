@@ -13,6 +13,11 @@ const DrinkSelection: React.FC = () => {
     useVendingMachine();
 
   const handleDrinkSelect = (drinkId: string) => {
+    // 결제 수단이 선택되지 않은 경우 음료 선택 불가
+    if (!state.selectedPaymentMethod) {
+      return;
+    }
+    
     selectDrink(drinkId);
 
     // 구매 가능한 경우 자동으로 구매 처리
@@ -42,7 +47,11 @@ const DrinkSelection: React.FC = () => {
                 isSelected ? "selected" : ""
               } ${canPurchase ? "purchasable" : ""}`}
               onClick={() => handleDrinkSelect(drink.id)}
-              disabled={drink.stock === 0 || state.isLoading}
+              disabled={
+                drink.stock === 0 || 
+                state.isLoading || 
+                !state.selectedPaymentMethod
+              }
             >
               <div className="drink-item__emoji">
                 {getDrinkEmoji(drink.name)}

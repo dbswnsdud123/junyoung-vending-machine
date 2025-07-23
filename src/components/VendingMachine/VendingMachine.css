@@ -44,6 +44,7 @@
 }
 
 .vending-machine__reset-btn {
+  margin-top: 20px;
   background: linear-gradient(145deg, #e74c3c, #c0392b);
   color: white;
   padding: 12px 24px;

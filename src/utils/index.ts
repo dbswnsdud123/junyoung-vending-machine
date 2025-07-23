@@ -1,4 +1,4 @@
-import { CashUnit } from "../types";
+import { CashUnit, TransactionStatus } from "../types";
 
 /**
  * 금액을 한국 원화 형식으로 포맷팅
@@ -127,19 +127,12 @@ export const getCashUnitText = (unit: CashUnit): string => {
  * @param status - 거래 상태
  * @returns 한국어 상태명
  */
-export const getTransactionStatusText = (
-  status:
-    | "idle"
-    | "selecting"
-    | "processing"
-    | "completed"
-    | "cancelled"
-    | "error"
-): string => {
+export const getTransactionStatusText = (status: TransactionStatus): string => {
   const statusMap = {
     idle: "대기중",
     selecting: "선택중",
     processing: "처리중",
+    card_processing: "카드 결제중",
     completed: "완료",
     cancelled: "취소됨",
     error: "오류",

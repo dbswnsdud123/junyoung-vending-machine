@@ -4,7 +4,6 @@ import {
   VendingMachineAction,
   INITIAL_DRINKS,
   Drink,
-  PurchaseResult,
 } from "../types";
 
 // 초기 상태
@@ -14,7 +13,7 @@ const initialState: VendingMachineState = {
   insertedAmount: 0,
   selectedDrink: null,
   transactionStatus: "idle",
-  message: "음료를 선택해주세요",
+  message: "결제 수단을 먼저 선택해주세요",
   isLoading: false,
 };
 
@@ -28,11 +27,15 @@ const vendingMachineReducer = (
       return {
         ...state,
         selectedPaymentMethod: action.payload,
+        // 결제 수단 변경 시 거래 관련 상태 초기화
+        insertedAmount: 0,
+        selectedDrink: null,
+        transactionStatus: "idle",
+        isLoading: false,
         message:
           action.payload === "cash"
             ? "동전이나 지폐를 넣어주세요"
-            : "카드를 삽입해주세요",
-        transactionStatus: "selecting",
+            : "음료을 선택해주세요",
       };
 
     case "INSERT_CASH":
@@ -43,23 +46,14 @@ const vendingMachineReducer = (
         message: `투입금액: ${newAmount.toLocaleString()}원`,
       };
 
-    case "PROCESS_CARD_PAYMENT":
-      return {
-        ...state,
-        insertedAmount: action.payload,
-        message: `카드 결제 승인: ${action.payload.toLocaleString()}원`,
-      };
-
     case "SELECT_DRINK":
       const drink = state.drinks.find((d) => d.id === action.payload);
       if (!drink) {
         return {
           ...state,
-          message: "음료를 찾을 수 없습니다",
+          message: "음료을 찾을 수 없습니다",
         };
       }
-
-      // 재고 확인
       if (drink.stock <= 0) {
         return {
           ...state,
@@ -67,21 +61,53 @@ const vendingMachineReducer = (
         };
       }
 
-      // 금액 확인
-      if (state.insertedAmount < drink.price) {
+      // 현금 결제인 경우
+      if (state.selectedPaymentMethod === "cash") {
+        if (state.insertedAmount < drink.price) {
+          return {
+            ...state,
+            message: `금액이 부족합니다. ${
+              drink.price - state.insertedAmount
+            }원 더 넣어주세요`,
+          };
+        }
         return {
           ...state,
-          message: `금액이 부족합니다. ${(
-            drink.price - state.insertedAmount
-          ).toLocaleString()}원 더 넣어주세요`,
+          selectedDrink: drink,
+          message: `${drink.name}을(를) 선택하셨습니다`,
+          transactionStatus: "processing",
         };
       }
 
+      // 카드 결제인 경우 - 음료 선택 시 바로 카드 결제 처리
+      if (state.selectedPaymentMethod === "card") {
+        // 카드 결제 시뮬레이션 (90% 성공률)
+        const isSuccess = Math.random() > 0.1;
+
+        if (isSuccess) {
+          return {
+            ...state,
+            selectedDrink: drink,
+            insertedAmount: drink.price,
+            message: `카드 결제 승인: ${drink.price.toLocaleString()}원`,
+            transactionStatus: "processing",
+          };
+        } else {
+          return {
+            ...state,
+            selectedDrink: drink,
+            message: "카드 결제에 실패했습니다. 다시 시도해주세요",
+            transactionStatus: "error",
+          };
+        }
+      }
+
+      // 결제 방법이 선택되지 않은 경우
       return {
         ...state,
         selectedDrink: drink,
-        message: `${drink.name}을(를) 선택하셨습니다`,
-        transactionStatus: "processing",
+        message: `${drink.name}을(를) 선택하셨습니다. 결제 방법을 선택해주세요`,
+        transactionStatus: "selecting",
       };
 
     case "PROCESS_PURCHASE":
@@ -89,15 +115,21 @@ const vendingMachineReducer = (
         return {
           ...state,
           message: "음료를 먼저 선택해주세요",
+          isLoading: false,
         };
       }
 
-      const change = state.insertedAmount - state.selectedDrink.price;
       const updatedDrinks = state.drinks.map((drink) =>
         drink.id === state.selectedDrink!.id
           ? { ...drink, stock: drink.stock - 1 }
           : drink
       );
+
+      // 카드 결제와 현금 결제 구분
+      const isCardPayment = state.selectedPaymentMethod === "card";
+      const change = isCardPayment
+        ? 0
+        : state.insertedAmount - state.selectedDrink.price;
 
       return {
         ...state,
@@ -106,10 +138,14 @@ const vendingMachineReducer = (
         selectedDrink: null,
         selectedPaymentMethod: null,
         transactionStatus: "completed",
-        message:
-          change > 0
-            ? `구매 완료! 거스름돈: ${change.toLocaleString()}원`
-            : "구매 완료!",
+        isLoading: false,
+        message: isCardPayment
+          ? `${state.selectedDrink.name} 구매 완료!`
+          : change > 0
+          ? `${
+              state.selectedDrink.name
+            } 구매 완료! 거스름돈: ${change.toLocaleString()}원`
+          : `${state.selectedDrink.name} 구매 완료!`,
       };
 
     case "CANCEL_TRANSACTION":
@@ -130,7 +166,7 @@ const vendingMachineReducer = (
         selectedDrink: null,
         selectedPaymentMethod: null,
         transactionStatus: "idle",
-        message: "음료를 선택해주세요",
+        message: "결제 수단을 먼저 선택해주세요",
       };
 
     case "SET_MESSAGE":
@@ -151,6 +187,15 @@ const vendingMachineReducer = (
         drinks: INITIAL_DRINKS, // 재고도 초기화
       };
 
+    case "CARD_PAYMENT_FAILED":
+      return {
+        ...state,
+        transactionStatus: "error",
+        message: "카드 결제에 실패했습니다. 다시 시도해주세요.",
+        isLoading: false,
+        selectedDrink: null,
+      };
+
     default:
       return state;
   }
@@ -163,7 +208,6 @@ interface VendingMachineContextType {
   // 헬퍼 함수들
   selectPaymentMethod: (method: "cash" | "card") => void;
   insertCash: (amount: 100 | 500 | 1000 | 5000 | 10000) => void;
-  processCardPayment: (amount: number) => Promise<void>;
   selectDrink: (drinkId: string) => void;
   processPurchase: () => void;
   cancelTransaction: () => void;
@@ -192,30 +236,38 @@ export const VendingMachineProvider = ({
     dispatch({ type: "INSERT_CASH", payload: amount });
   };
 
-  const processCardPayment = async (amount: number) => {
-    dispatch({ type: "SET_LOADING", payload: true });
-    dispatch({ type: "SET_MESSAGE", payload: "카드 결제 처리 중..." });
+  const selectDrink = async (drinkId: string) => {
+    const drink = state.drinks.find((d) => d.id === drinkId);
 
-    // 카드 결제 시뮬레이션 (2초 대기)
-    setTimeout(() => {
-      // 90% 확률로 성공
-      const isSuccess = Math.random() > 0.1;
+    // 카드 결제인 경우 비동기 처리
+    if (state.selectedPaymentMethod === "card" && drink) {
+      // 로딩 시작
+      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "SET_MESSAGE", payload: "카드 결제 진행 중..." });
 
-      if (isSuccess) {
-        dispatch({ type: "PROCESS_CARD_PAYMENT", payload: amount });
-      } else {
-        dispatch({
-          type: "SET_MESSAGE",
-          payload: "카드 결제에 실패했습니다. 다시 시도해주세요",
-        });
-      }
+      // 1.5초 후 결제 결과 처리
+      setTimeout(() => {
+        const isSuccess = Math.random() > 0.1; // 90% 성공률
 
-      dispatch({ type: "SET_LOADING", payload: false });
-    }, 2000);
-  };
+        if (isSuccess) {
+          // 카드 결제 성공 시 음료 선택 상태 설정
+          dispatch({
+            type: "SELECT_DRINK",
+            payload: drinkId,
+          });
 
-  const selectDrink = (drinkId: string) => {
-    dispatch({ type: "SELECT_DRINK", payload: drinkId });
+          // 잠시 후 구매 완료 처리
+          setTimeout(() => {
+            dispatch({ type: "PROCESS_PURCHASE" });
+          }, 1000);
+        } else {
+          dispatch({ type: "CARD_PAYMENT_FAILED" });
+        }
+      }, 1500);
+    } else {
+      // 현금 결제 또는 일반적인 경우
+      dispatch({ type: "SELECT_DRINK", payload: drinkId });
+    }
   };
 
   const processPurchase = () => {
@@ -240,7 +292,6 @@ export const VendingMachineProvider = ({
     dispatch,
     selectPaymentMethod,
     insertCash,
-    processCardPayment,
     selectDrink,
     processPurchase,
     cancelTransaction,

@@ -12,13 +12,6 @@ const VendingMachine: React.FC = () => {
     <div className="vending-machine">
       <div className="vending-machine__header">
         <h1 className="vending-machine__title">🥤 자판기</h1>
-        <button
-          className="vending-machine__reset-btn"
-          onClick={cancelTransaction}
-          disabled={state.isLoading}
-        >
-          취소/환불
-        </button>
       </div>
 
       <div className="vending-machine__body">

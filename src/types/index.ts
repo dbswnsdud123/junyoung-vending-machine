@@ -18,6 +18,7 @@ export type TransactionStatus =
   | "idle" // 대기 상태
   | "selecting" // 음료 선택 중
   | "processing" // 처리 중
+  | "card_processing" // 카드 결제 처리 중
   | "completed" // 완료
   | "cancelled" // 취소됨
   | "error"; // 오류
@@ -44,14 +45,18 @@ export interface VendingMachineState {
 export type VendingMachineAction =
   | { type: "SELECT_PAYMENT_METHOD"; payload: PaymentMethod }
   | { type: "INSERT_CASH"; payload: CashUnit }
-  | { type: "PROCESS_CARD_PAYMENT"; payload: number }
   | { type: "SELECT_DRINK"; payload: string } // drink id
+  | {
+      type: "PROCESS_CARD_PAYMENT";
+      payload: { drinkId: string; success: boolean };
+    }
   | { type: "PROCESS_PURCHASE" }
   | { type: "CANCEL_TRANSACTION" }
   | { type: "RETURN_CHANGE" }
   | { type: "SET_MESSAGE"; payload: string }
   | { type: "SET_LOADING"; payload: boolean }
-  | { type: "RESET_MACHINE" };
+  | { type: "RESET_MACHINE" }
+  | { type: "CARD_PAYMENT_FAILED" };
 
 // 구매 결과 타입
 export interface PurchaseResult {
